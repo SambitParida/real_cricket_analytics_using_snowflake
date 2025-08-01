@@ -1,10 +1,10 @@
-use database cricket;
-use schema land;
-
-list @cricket_stg;
-
-SELECT * FROM raw.match_raw_tbl;
-
+-- USE SYSADMIN ROLE TO CREATE OBJECTS --
+USE ROLE SYSADMIN;
+-- USE DATABASE --
+USE DATABASE CRICKET;
+-- USE SCHEMA --
+USE SCHEMA CLEAN;
+-- CREATE TRANSIENT TABLE --
 create or replace transient table cricket.clean.match_detail_clean as
 select 
     info:match_type_number::int as match_type_number,
