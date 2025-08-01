@@ -10,7 +10,7 @@ CREATE OR REPLACE FILE FORMAT JSON_FORMAT
     TYPE = JSON 
     NULL_IF = ('\N', 'NULL', 'NUL', '')
     STRIP_OUTER_ARRAY = TRUE
-    comment = 'json file format'
+    comment = 'json file format';
 
 -- Create internal named stage --
 CREATE OR REPLACE STAGE CRICKET_STG;
