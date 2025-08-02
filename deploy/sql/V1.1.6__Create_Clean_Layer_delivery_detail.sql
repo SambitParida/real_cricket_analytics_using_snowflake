@@ -9,7 +9,7 @@ create or replace transient table cricket.clean.delivery_clean_tbl as
 select 
     raw.info:match_type_number::int as match_type_number,   
     i.value:team::text as team_name,
-    o.value:over::text as overs,
+    o.value:over::text as over,
     d.value:bowler::text as bowler,
     d.value:batter::text as batter,
     d.value:non_striker::text as non_striker,
