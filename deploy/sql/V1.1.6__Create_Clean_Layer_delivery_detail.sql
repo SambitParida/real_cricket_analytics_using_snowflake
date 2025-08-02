@@ -8,7 +8,7 @@ USE SCHEMA CLEAN;
 create or replace transient table cricket.clean.delivery_clean_tbl as
 select 
     raw.info:match_type_number::int as match_type_number,   
-    i.value:team::text as country,
+    i.value:team::text as team_name,
     o.value:over::text as overs,
     d.value:bowler::text as bowler,
     d.value:batter::text as batter,
