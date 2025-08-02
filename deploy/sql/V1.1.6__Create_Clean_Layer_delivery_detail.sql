@@ -5,28 +5,28 @@ USE DATABASE CRICKET;
 -- USE SCHEMA --
 USE SCHEMA CLEAN;
 -- CREATE TRANSIENT TABLE --
-CREATE OR REPLACE TRANSIENT TABLE CRICKET.CLEAN.DELIVERY_CLEAN_TBL AS
-SELECT 
-    RAW.INFO:MATCH_TYPE_NUMBER::INT AS MATCH_TYPE_NUMBER,   
-    I.VALUE:TEAM::TEXT AS COUNTRY,
-    O.VALUE:OVER::TEXT AS OVERS,
-    D.VALUE:BOWLER::TEXT AS BOWLER,
-    D.VALUE:BATTER::TEXT AS BATTER,
-    D.VALUE:NON_STRIKER::TEXT AS NON_STRIKER,
-    D.VALUE:RUNS:BATTER::INT AS RUNS,
-    D.VALUE:RUNS:EXTRAS::INT AS EXTRAS,
-    D.VALUE:RUNS:TOTAL::INT AS TOTAL,
-    W.VALUE:PLAYER_OUT::TEXT AS PLAYER_OUT,
-    W.VALUE:KIND::TEXT AS PLAYER_OUT_KIND,
-    W.VALUE:FIELDERS::VARIANT AS FIELDERS,
-    -- O.OVERS:OVER:VALUE:OVER::INT AS OVER,
-    RAW.STG_FILE_NAME,
-    RAW.STG_FILE_ROW_NUMBER,
-    RAW.STG_FILE_CONTENT_KEY,
-    RAW.STG_MODIFIED_TS
-FROM
-CRICKET.RAW.MATCH_RAW_TBL RAW,
-LATERAL FLATTEN(INPUT => RAW.INNINGS) I,
-LATERAL FLATTEN(INPUT => I.VALUE:OVERS) O,
-LATERAL FLATTEN(INPUT => O.VALUE:DELIVERIES) D,
-LATERAL FLATTEN(INPUT => D.VALUE:WICKETS, OUTER => TRUE) W
+create or replace transient table cricket.clean.delivery_clean_tbl as
+select 
+    raw.info:match_type_number::int as match_type_number,   
+    i.value:team::text as country,
+    o.value:over::text as overs,
+    d.value:bowler::text as bowler,
+    d.value:batter::text as batter,
+    d.value:non_striker::text as non_striker,
+    d.value:runs:batter::int as runs,
+    d.value:runs:extras::int as extras,
+    d.value:runs:total::int as total,
+    w.value:player_out::text as player_out,
+    w.value:kind::text as player_out_kind,
+    w.value:fielders::variant as fielders,
+    -- o.overs:over:value:over::int as over,
+    raw.stg_file_name,
+    raw.stg_file_row_number,
+    raw.stg_file_content_key,
+    raw.stg_modified_ts
+from
+cricket.raw.match_raw_tbl raw,
+lateral flatten(input => raw.innings) i,
+lateral flatten(input => i.value:overs) o,
+lateral flatten(input => o.value:deliveries) d,
+lateral flatten(input => d.value:wickets, outer => true) w
