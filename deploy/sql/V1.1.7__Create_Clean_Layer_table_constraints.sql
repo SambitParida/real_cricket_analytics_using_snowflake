@@ -24,7 +24,7 @@ modify column batter set not null;
 alter table cricket.clean.delivery_clean_tbl
 modify column non_striker set not null;
 
--- fk relationship
+-- foreign key relationship
 alter table cricket.clean.delivery_clean_tbl
 add constraint fk_delivery_match_id
 foreign key (match_type_number)
