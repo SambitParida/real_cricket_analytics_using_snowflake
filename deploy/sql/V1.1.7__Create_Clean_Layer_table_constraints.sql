@@ -27,7 +27,7 @@ modify column non_striker set not null;
 -- foreign key relationship
 
 
-ALTER TABLE ricket.clean.match_detail_clean
+ALTER TABLE cricket.clean.match_detail_clean
 ADD CONSTRAINT pk_match_detail_clean PRIMARY KEY (match_type_number);
 
 alter table cricket.clean.delivery_clean_tbl
