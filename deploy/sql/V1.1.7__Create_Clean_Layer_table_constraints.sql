@@ -4,7 +4,8 @@ USE ROLE SYSADMIN;
 USE DATABASE CRICKET;
 -- USE SCHEMA --
 USE SCHEMA CLEAN;
--- CREATE TRANSIENT TABLE --
+
+-- CREATE Constraints --
 alter table cricket.clean.delivery_clean_tbl
 modify column match_type_number set not null;
 
