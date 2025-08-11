@@ -1,0 +1,22 @@
+-- USE SYSADMIN ROLE TO CREATE OBJECTS --
+USE ROLE SYSADMIN;
+-- USE DATABASE --
+USE DATABASE CRICKET;
+-- USE SCHEMA --
+USE SCHEMA CONSUMPTION;
+
+TRUNCATE TABLE CRICKET.CONSUMPTION.REFEREE_DIM;
+INSERT INTO CRICKET.CONSUMPTION.REFEREE_DIM(REFEREE_NAME,REFEREE_TYPE)
+select
+category,
+name
+from(
+select
+raw.info,
+o.key::text as category,
+o.value::text as official_name,
+f.value::text as name
+FROM RAW.MATCH_RAW_TBL RAW,
+LATERAL FLATTEN(input => RAW.info:officials) o,
+LATERAL FLATTEN(
+    INPUT => PARSE_JSON(official_name)) f)
