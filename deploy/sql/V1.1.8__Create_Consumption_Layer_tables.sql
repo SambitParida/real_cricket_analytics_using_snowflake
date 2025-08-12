@@ -112,4 +112,25 @@ CREATE or replace TABLE match_fact (
     CONSTRAINT fk_winner_team FOREIGN KEY (winner_team_id) REFERENCES team_dim (team_id)
 );
 
+CREATE or replace TABLE delivery_fact (
+    match_id INT ,
+    team_id INT,
+    bowler_id INT,
+    batter_id INT,
+    non_striker_id INT,
+    over INT,
+    runs INT,
+    extra_runs INT,
+    extra_type VARCHAR(255),
+    player_out VARCHAR(255),
+    player_out_kind VARCHAR(255),
+
+    CONSTRAINT fk_del_match_id FOREIGN KEY (match_id) REFERENCES match_fact (match_id),
+    CONSTRAINT fk_del_team FOREIGN KEY (team_id) REFERENCES team_dim (team_id),
+    CONSTRAINT fk_bowler FOREIGN KEY (bowler_id) REFERENCES player_dim (player_id),
+    CONSTRAINT fk_batter FOREIGN KEY (batter_id) REFERENCES player_dim (player_id),
+    CONSTRAINT fk_stricker FOREIGN KEY (non_striker_id) REFERENCES player_dim (player_id)
+);
+
+
 
