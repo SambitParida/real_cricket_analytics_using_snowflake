@@ -21,6 +21,30 @@ The implementation is structured into the following key activities:
 - Develop and populate a consumption layer optimized for analytical queries.
 - Define and load fact and dimension tables to support downstream reporting and analytics requirements.
 
+#### Dimension Tables  
+These hold descriptive attributes for analysis.  
+date_dim — Stores calendar details (day, month, year, quarter, weekend flag).  
+referee_dim — Stores referee names and their types (on-field, TV umpire, match referee, etc.).  
+team_dim — Stores team names.  
+player_dim — Stores player details and links each player to their team.  
+venue_dim — Stores venue details (location, pitch, capacity, coordinates, etc.).  
+match_type_dim — Stores match types (e.g., Test, ODI, T20).
+
+#### Fact Tables  
+These store numeric, measurable data linked to dimensions.  
+
+match_fact — One row per match.  
+Contains:  
+Foreign keys to date_dim, referee_dim, team_dim (for both teams), match_type_dim, venue_dim.  
+Match-level statistics (overs, runs, wickets, extras, etc.).  
+Match outcome details (toss winner, decision, match result, winning team).
+
+delivery_fact — One row per delivery (ball bowled).  
+Contains:
+Foreign keys to match_fact, team_dim, player_dim (bowler, batter, non-striker).
+Delivery-level data (runs scored, extras, wickets).
+
+
 ## Data Model
 
 
