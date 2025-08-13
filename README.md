@@ -47,7 +47,7 @@ The implementation is structured into the following key activities:
 
 ## Data Model
 
-
+![Alt text](https://github.com/SambitParida/real_cricket_analytics_using_snowflake/datamodel/datamodel.jpg)
 
 ## Snowflake Concepts used
 
