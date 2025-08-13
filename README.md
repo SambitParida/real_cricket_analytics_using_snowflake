@@ -7,7 +7,7 @@ Create a data pipeline for cricket match and delivery summary reports.
 The implementation is structured into the following key activities:
 
 1. ### Data Ingestion : Acquire match data in JSON format.
-The nested JSON structure contains:
+  The nested JSON structure contains:
 - Match metadata: Match ID, match type, venue, overs, participating teams, toss winner, match winner.
 - Match officials: On-field umpires, referee, TV umpire.
 - Player information.
