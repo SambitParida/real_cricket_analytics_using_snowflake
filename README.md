@@ -33,3 +33,7 @@ The nested JSON structure contains:
 Tools Used: 
 1. Snowflake Business Critical Edition
 2. VSCODE
+
+### References 
+https://www.youtube.com/watch?v=qDmqE89DSQQ
+Data Engineering Simplified
