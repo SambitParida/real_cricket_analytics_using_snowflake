@@ -1,36 +1,72 @@
 use database cricket;
-use schema land;
+use role sysadmin;
+use schema consumption;
 
-list @cricket_stg;
 
-SELECT * FROM raw.match_raw_tbl;
-
-create or replace transient table cricket.clean.match_detail_clean as
 
 
 select 
-    raw.info:match_type_number::int as match_type_number,   
-    i.value:team::text as country,
-    o.value:over::text as overs,
-    d.value:bowler::text as bowler,
-    d.value:batter::text as batter,
-    d.value:non_striker::text as non_striker,
-    d.value:runs:batter::int as runs,
-    d.value:runs:extras::int as extras,
-    d.value:runs:total::int as total,
-    w.value:player_out::text as player_out,
-    w.value:kind::text as player_out_kind,
-    w.value:fielders::variant as fielders,
-    -- o.overs:over:value:over::int as over,
-    raw.stg_file_name,
-    raw.stg_file_row_number,
-    raw.STG_FILE_CONTENT_KEY,
-    raw.STG_MODIFIED_TS
-from
-cricket.raw.match_raw_tbl raw,
-LATERAL FLATTEN(input => raw.innings) i,
-LATERAL FLATTEN(input => i.value:overs) o,
-LATERAL FLATTEN(input => o.value:deliveries) d,
-LATERAL FLATTEN(input => d.value:wickets, outer => TRUE) w
+    m.match_type_number as match_id,
+    dd.date_id as date_id,
+    0 as referee_id,
+    ftd.team_id as first_team_id,
+    std.team_id as second_team_id,
+    mtd.match_type_id as match_type_id,
+    vd.venue_id as venue_id,
+    50 as total_overs,
+    6 as balls_per_overs,
+    max(case when d.team_name = m.first_team then  d.over else 0 end ) as OVERS_PLAYED_BY_TEAM_A,
+    sum(case when d.team_name = m.first_team then  1 else 0 end ) as balls_PLAYED_BY_TEAM_A,
+    sum(case when d.team_name = m.first_team then  d.extras else 0 end ) as extra_balls_PLAYED_BY_TEAM_A,
+    sum(case when d.team_name = m.first_team then  d.extras else 0 end ) as extra_runs_scored_BY_TEAM_A,
+    0 fours_by_team_a,
+    0 sixes_by_team_a,
+    (sum(case when d.team_name = m.first_team then  d.runs else 0 end ) + sum(case when d.team_name = m.first_team then  d.extras else 0 end ) ) as total_runs_scored_BY_TEAM_A,
+    sum(case when d.team_name = m.first_team and player_out is not null then  1 else 0 end ) as wicket_lost_by_team_a,    
+    
+    max(case when d.team_name = m.second_team then  d.over else 0 end ) as OVERS_PLAYED_BY_TEAM_B,
+    sum(case when d.team_name = m.second_team then  1 else 0 end ) as balls_PLAYED_BY_TEAM_B,
+    sum(case when d.team_name = m.second_team then  d.extras else 0 end ) as extra_balls_PLAYED_BY_TEAM_B,
+    sum(case when d.team_name = m.second_team then  d.extras else 0 end ) as extra_runs_scored_BY_TEAM_B,
+    0 fours_by_team_b,
+    0 sixes_by_team_b,
+    (sum(case when d.team_name = m.second_team then  d.runs else 0 end ) + sum(case when d.team_name = m.second_team then  d.extras else 0 end ) ) as total_runs_scored_BY_TEAM_B,
+    sum(case when d.team_name = m.second_team and player_out is not null then  1 else 0 end ) as wicket_lost_by_team_b,
+    tw.team_id as toss_winner_team_id,
+    m.toss_decision as toss_decision,
+    m.matach_result as matach_result,
+    mw.team_id as winner_team_id
+     
+from 
+    cricket.clean.match_detail_clean m
+    join date_dim dd on m.event_date = dd.full_dt
+    join team_dim ftd on m.first_team = ftd.team_name 
+    join team_dim std on m.second_team = std.team_name 
+    join match_type_dim mtd on m.match_type = mtd.match_type
+    join venue_dim vd on m.venue = vd.venue_name and m.city = vd.city
+    join cricket.clean.delivery_clean_tbl d  on d.match_type_number = m.match_type_number 
+    join team_dim tw on m.toss_winner = tw.team_name 
+    join team_dim mw on m.winner= mw.team_name 
+    where m.match_type_number =  4682
+    group by
+        m.match_type_number,
+        date_id,
+        referee_id,
+        first_team_id,
+        second_team_id,
+        match_type_id,
+        venue_id,
+        total_overs,
+        toss_winner_team_id,
+        toss_decision,
+        matach_result,
+        winner_team_id        ;
 
 
+select max(d.over), m.match_type_number from cricket.clean.match_detail_clean m inner join clean.delivery_clean_tbl d
+on d.match_type_number = m.match_type_number group by m.match_type_number;
+
+select max(cast(over as int)) from clean.delivery_clean_tbl d where match_type_number = 4682 order by cast(over as int);
+
+select * from delivery_fact;
+select * from match_fact;
