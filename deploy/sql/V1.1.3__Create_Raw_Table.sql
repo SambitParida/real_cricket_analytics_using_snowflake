@@ -1,19 +1,19 @@
--- USE SYSADMIN ROLE TO CREATE OBJECTS --
-USE ROLE SYSADMIN;
--- USE DATABASE --
-USE DATABASE CRICKET;
--- USE SCHEMA --
-USE SCHEMA RAW;
--- CREATE TRANSIENT TABLE --
-CREATE OR REPLACE TRANSIENT TABLE MATCH_RAW_TBL
+-- use sysadmin role to create objects --
+use role sysadmin;
+-- use database --
+use database cricket;
+-- use schema --
+use schema raw;
+-- create transient table --
+create or replace transient table match_raw_tbl
 (
-    META OBJECT NOT NULL,
-    INFO VARIANT NOT NULL,
-    INNINGS ARRAY NOT NULL,
-    STG_FILE_NAME TEXT NOT NULL,
-    STG_FILE_ROW_NUMBER INT NOT NULL,
-    STG_FILE_CONTENT_KEY TEXT NOT NULL,
-    STG_MODIFIED_TS TIMESTAMP NOT NULL
+    meta object not null,
+    info variant not null,
+    innings array not null,
+    stg_file_name text not null,
+    stg_file_row_number int not null,
+    stg_file_content_key text not null,
+    stg_modified_ts timestamp not null
 )
-COMMENT = 'THIS IS THE RAW TABLE TO STORE ALL THE JSON DATA FILE WITH ROOT ELEMENTS'
+comment = 'this is the raw table to store all the json data file with root elements'
 ;

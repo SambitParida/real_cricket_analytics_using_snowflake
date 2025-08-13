@@ -1,10 +1,10 @@
--- USE SYSADMIN ROLE TO CREATE OBJECTS --
-USE ROLE SYSADMIN;
--- USE DATABASE --
-USE DATABASE CRICKET;
--- USE SCHEMA --
-USE SCHEMA CLEAN;
--- CREATE TRANSIENT TABLE --
+-- use sysadmin role to create objects --
+use role sysadmin;
+-- use database --
+use database cricket;
+-- use schema --
+use schema clean;
+-- create transient table --
 create or replace transient table cricket.clean.match_detail_clean as
 select 
     info:match_type_number::int as match_type_number,
@@ -15,7 +15,7 @@ select
     when
         info:event:stage::text is not null then info:event::text
     else
-        'NA'
+        'na'
     end as match_stage,
     info:dates[0]::date as event_date,
     date_part('year', info:dates[0]::date) as event_year,
@@ -36,14 +36,14 @@ select
     info:teams[0]::text as first_team,
     info:teams[1]::text as second_team,
     case 
-        when info:outcome.winner is not null then 'Result Declared'
-        when info:outcome.result = 'tie' then 'Tie'
-        when info:outcome.result = 'no result' then 'No Result'
+        when info:outcome.winner is not null then 'result declared'
+        when info:outcome.result = 'tie' then 'tie'
+        when info:outcome.result = 'no result' then 'no result'
         else info:outcome.result
     end as matach_result,
     case 
         when info:outcome.winner is not null then info:outcome.winner
-        else 'NA'
+        else 'na'
     end as winner,   
 
     info:toss.winner::text as toss_winner,
@@ -51,7 +51,7 @@ select
     --
     stg_file_name ,
     stg_file_row_number,
-    STG_FILE_CONTENT_KEY,
-    STG_MODIFIED_TS
+    stg_file_content_key,
+    stg_modified_ts
 from
 cricket.raw.match_raw_tbl;

@@ -1,17 +1,17 @@
--- USE SYSADMIN ROLE TO CREATE OBJECTS --
-USE ROLE SYSADMIN;
--- USE DATABASE --
-USE DATABASE CRICKET;
--- USE SCHEMA --
-USE SCHEMA LAND;
+-- use sysadmin role to create objects --
+use role sysadmin;
+-- use database --
+use database cricket;
+-- use schema --
+use schema land;
 
--- CREATE JSON FILE FORMAT --
-CREATE OR REPLACE FILE FORMAT JSON_FORMAT
-    TYPE = JSON 
-    NULL_IF = ('\N', 'NULL', 'NUL', '')
-    STRIP_OUTER_ARRAY = TRUE
+-- create json file format --
+create or replace file format json_format
+    type = json 
+    null_if = ('\n', 'null', 'nul', '')
+    strip_outer_array = true
     comment = 'json file format';
 
--- Create internal named stage --
-CREATE OR REPLACE STAGE CRICKET_STG 
-    DIRECTORY =(ENABLE = TRUE);
+-- create internal named stage --
+create or replace stage cricket_stg 
+    directory =(enable = true);

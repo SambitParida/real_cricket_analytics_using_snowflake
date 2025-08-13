@@ -71,7 +71,6 @@ create or replace table match_fact (
     match_id int primary key,
     date_id int not null,
     referee_id int not null,
-    referee_id int not null,
     team_a_id int not null,
     team_b_id int not null,
     match_type_id int not null,
