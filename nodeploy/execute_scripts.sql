@@ -33,4 +33,42 @@ LATERAL FLATTEN(input => i.value:overs) o,
 LATERAL FLATTEN(input => o.value:deliveries) d,
 LATERAL FLATTEN(input => d.value:wickets, outer => TRUE) w
 
+-----
 
+select * from clean.player_clean_tbl;
+
+SELECT * FROM RAW.MATCH_RAW_TBL;
+
+
+select
+raw.info,
+o.key::text as category,
+o.value::text as official_name
+-- o.umpires::text as umpires
+
+FROM RAW.MATCH_RAW_TBL RAW,
+LATERAL FLATTEN(input => RAW.info:officials) o,
+LATERAL FLATTEN(input => o.value) u
+
+select
+category,
+name
+from(
+select
+raw.info,
+o.key::text as category,
+o.value::text as official_name,
+f.value::text as name
+FROM RAW.MATCH_RAW_TBL RAW,
+LATERAL FLATTEN(input => RAW.info:officials) o,
+LATERAL FLATTEN(
+    INPUT => PARSE_JSON(official_name)) f)
+
+
+select * from clean.match_detail_clean;
+
+select venue, 
+case when city is null then 'NA'
+else city end as city,
+from cricket.clean.match_detail_clean
+group by venue, city
