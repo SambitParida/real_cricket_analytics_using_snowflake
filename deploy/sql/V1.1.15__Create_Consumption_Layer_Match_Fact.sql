@@ -1,64 +1,65 @@
--- USE SYSADMIN ROLE TO CREATE OBJECTS --
-USE ROLE SYSADMIN;
--- USE DATABASE --
-USE DATABASE CRICKET;
--- USE SCHEMA --
-USE SCHEMA CONSUMPTION;
+-- use sysadmin role to create objects --
+use role sysadmin;
+-- use database --
+use database cricket;
+-- use schema --
+use schema consumption;
 
-TRUNCATE TABLE CRICKET.CONSUMPTION.MATCH_FACT;
-INSERT INTO CRICKET.CONSUMPTION.MATCH_FACT(MATCH_ID, DATE_ID, REFEREE_ID, TEAM_A_ID, TEAM_B_ID, MATCH_TYPE_ID, VENUE_ID, TOTAL_OVERS, BALLS_PER_OVER, OVERS_PLAYED_BY_TEAM_A, BOWLS_PLAYED_BY_TEAM_A, EXTRA_BOWLS_PLAYED_BY_TEAM_A, EXTRA_RUNS_SCORED_BY_TEAM_A, FOURS_BY_TEAM_A, SIXES_BY_TEAM_A, TOTAL_SCORE_BY_TEAM_A, WICKET_LOST_BY_TEAM_A, OVERS_PLAYED_BY_TEAM_B, BOWLS_PLAYED_BY_TEAM_B, EXTRA_BOWLS_PLAYED_BY_TEAM_B, EXTRA_RUNS_SCORED_BY_TEAM_B, FOURS_BY_TEAM_B, SIXES_BY_TEAM_B, TOTAL_SCORE_BY_TEAM_B, WICKET_LOST_BY_TEAM_B, TOSS_WINNER_TEAM_ID, TOSS_DECISION, MATCH_RESULT, WINNER_TEAM_ID)
-SELECT 
-    M.MATCH_TYPE_NUMBER AS MATCH_ID,
-    DD.DATE_ID AS DATE_ID,
-    0 AS REFEREE_ID,
-    FTD.TEAM_ID AS FIRST_TEAM_ID,
-    STD.TEAM_ID AS SECOND_TEAM_ID,
-    MTD.MATCH_TYPE_ID AS MATCH_TYPE_ID,
-    VD.VENUE_ID AS VENUE_ID,
-    50 AS TOTAL_OVERS,
-    6 AS BALLS_PER_OVERS,
-    MAX(CASE WHEN D.TEAM_NAME = M.FIRST_TEAM THEN  D.OVER ELSE 0 END ) AS OVERS_PLAYED_BY_TEAM_A,
-    SUM(CASE WHEN D.TEAM_NAME = M.FIRST_TEAM THEN  1 ELSE 0 END ) AS BALLS_PLAYED_BY_TEAM_A,
-    SUM(CASE WHEN D.TEAM_NAME = M.FIRST_TEAM THEN  D.EXTRAS ELSE 0 END ) AS EXTRA_BALLS_PLAYED_BY_TEAM_A,
-    SUM(CASE WHEN D.TEAM_NAME = M.FIRST_TEAM THEN  D.EXTRAS ELSE 0 END ) AS EXTRA_RUNS_SCORED_BY_TEAM_A,
-    0 FOURS_BY_TEAM_A,
-    0 SIXES_BY_TEAM_A,
-    (SUM(CASE WHEN D.TEAM_NAME = M.FIRST_TEAM THEN  D.RUNS ELSE 0 END ) + SUM(CASE WHEN D.TEAM_NAME = M.FIRST_TEAM THEN  D.EXTRAS ELSE 0 END ) ) AS TOTAL_RUNS_SCORED_BY_TEAM_A,
-    SUM(CASE WHEN D.TEAM_NAME = M.FIRST_TEAM AND PLAYER_OUT IS NOT NULL THEN  1 ELSE 0 END ) AS WICKET_LOST_BY_TEAM_A,    
+truncate table cricket.consumption.match_fact;
+insert into cricket.consumption.match_fact(match_id, date_id, referee_id, team_a_id, team_b_id, match_type_id, venue_id, total_overs, balls_per_over, overs_played_by_team_a, bowls_played_by_team_a, extra_bowls_played_by_team_a, extra_runs_scored_by_team_a, fours_by_team_a, sixes_by_team_a, total_score_by_team_a, wicket_lost_by_team_a, overs_played_by_team_b, bowls_played_by_team_b, extra_bowls_played_by_team_b, extra_runs_scored_by_team_b, fours_by_team_b, sixes_by_team_b, total_score_by_team_b, wicket_lost_by_team_b, toss_winner_team_id, toss_decision, match_result, winner_team_id)
+select 
+    m.match_type_number as match_id,
+    dd.date_id as date_id,
+    rd.referee_id as referee_id,
+    ftd.team_id as first_team_id,
+    std.team_id as second_team_id,
+    mtd.match_type_id as match_type_id,
+    vd.venue_id as venue_id,
+    50 as total_overs,
+    6 as balls_per_overs,
+    max(case when d.team_name = m.first_team then  d.over else 0 end ) as overs_played_by_team_a,
+    sum(case when d.team_name = m.first_team then  1 else 0 end ) as balls_played_by_team_a,
+    sum(case when d.team_name = m.first_team then  d.extras else 0 end ) as extra_balls_played_by_team_a,
+    sum(case when d.team_name = m.first_team then  d.extras else 0 end ) as extra_runs_scored_by_team_a,
+    0 fours_by_team_a,
+    0 sixes_by_team_a,
+    (sum(case when d.team_name = m.first_team then  d.runs else 0 end ) + sum(case when d.team_name = m.first_team then  d.extras else 0 end ) ) as total_runs_scored_by_team_a,
+    sum(case when d.team_name = m.first_team and player_out is not null then  1 else 0 end ) as wicket_lost_by_team_a,    
     
-    MAX(CASE WHEN D.TEAM_NAME = M.SECOND_TEAM THEN  D.OVER ELSE 0 END ) AS OVERS_PLAYED_BY_TEAM_B,
-    SUM(CASE WHEN D.TEAM_NAME = M.SECOND_TEAM THEN  1 ELSE 0 END ) AS BALLS_PLAYED_BY_TEAM_B,
-    SUM(CASE WHEN D.TEAM_NAME = M.SECOND_TEAM THEN  D.EXTRAS ELSE 0 END ) AS EXTRA_BALLS_PLAYED_BY_TEAM_B,
-    SUM(CASE WHEN D.TEAM_NAME = M.SECOND_TEAM THEN  D.EXTRAS ELSE 0 END ) AS EXTRA_RUNS_SCORED_BY_TEAM_B,
-    0 FOURS_BY_TEAM_B,
-    0 SIXES_BY_TEAM_B,
-    (SUM(CASE WHEN D.TEAM_NAME = M.SECOND_TEAM THEN  D.RUNS ELSE 0 END ) + SUM(CASE WHEN D.TEAM_NAME = M.SECOND_TEAM THEN  D.EXTRAS ELSE 0 END ) ) AS TOTAL_RUNS_SCORED_BY_TEAM_B,
-    SUM(CASE WHEN D.TEAM_NAME = M.SECOND_TEAM AND PLAYER_OUT IS NOT NULL THEN  1 ELSE 0 END ) AS WICKET_LOST_BY_TEAM_B,
-    TW.TEAM_ID AS TOSS_WINNER_TEAM_ID,
-    M.TOSS_DECISION AS TOSS_DECISION,
-    M.MATACH_RESULT AS MATACH_RESULT,
-    MW.TEAM_ID AS WINNER_TEAM_ID
+    max(case when d.team_name = m.second_team then  d.over else 0 end ) as overs_played_by_team_b,
+    sum(case when d.team_name = m.second_team then  1 else 0 end ) as balls_played_by_team_b,
+    sum(case when d.team_name = m.second_team then  d.extras else 0 end ) as extra_balls_played_by_team_b,
+    sum(case when d.team_name = m.second_team then  d.extras else 0 end ) as extra_runs_scored_by_team_b,
+    0 fours_by_team_b,
+    0 sixes_by_team_b,
+    (sum(case when d.team_name = m.second_team then  d.runs else 0 end ) + sum(case when d.team_name = m.second_team then  d.extras else 0 end ) ) as total_runs_scored_by_team_b,
+    sum(case when d.team_name = m.second_team and player_out is not null then  1 else 0 end ) as wicket_lost_by_team_b,
+    tw.team_id as toss_winner_team_id,
+    m.toss_decision as toss_decision,
+    m.matach_result as matach_result,
+    mw.team_id as winner_team_id
      
-FROM 
-    CRICKET.CLEAN.MATCH_DETAIL_CLEAN M
-    JOIN DATE_DIM DD ON M.EVENT_DATE = DD.FULL_DT
-    JOIN TEAM_DIM FTD ON M.FIRST_TEAM = FTD.TEAM_NAME 
-    JOIN TEAM_DIM STD ON M.SECOND_TEAM = STD.TEAM_NAME 
-    JOIN MATCH_TYPE_DIM MTD ON M.MATCH_TYPE = MTD.MATCH_TYPE
-    JOIN VENUE_DIM VD ON M.VENUE = VD.VENUE_NAME AND M.CITY = VD.CITY
-    JOIN CRICKET.CLEAN.DELIVERY_CLEAN_TBL D  ON D.MATCH_TYPE_NUMBER = M.MATCH_TYPE_NUMBER 
-    JOIN TEAM_DIM TW ON M.TOSS_WINNER = TW.TEAM_NAME 
-    JOIN TEAM_DIM MW ON M.WINNER= MW.TEAM_NAME 
-    GROUP BY
-        M.MATCH_TYPE_NUMBER,
-        DATE_ID,
-        REFEREE_ID,
-        FIRST_TEAM_ID,
-        SECOND_TEAM_ID,
-        MATCH_TYPE_ID,
-        VENUE_ID,
-        TOTAL_OVERS,
-        TOSS_WINNER_TEAM_ID,
-        TOSS_DECISION,
-        MATACH_RESULT,
-        WINNER_TEAM_ID;
+from 
+    cricket.clean.match_detail_clean m
+    join date_dim dd on m.event_date = dd.full_dt
+    join team_dim ftd on m.first_team = ftd.team_name 
+    join team_dim std on m.second_team = std.team_name 
+    join match_type_dim mtd on m.match_type = mtd.match_type
+    join venue_dim vd on m.venue = vd.venue_name and m.city = vd.city
+    join cricket.clean.delivery_clean_tbl d  on d.match_type_number = m.match_type_number 
+    join team_dim tw on m.toss_winner = tw.team_name 
+    join team_dim mw on m.winner= mw.team_name 
+    join referee_dim rd on m.match_referee = rd.referee_name
+    group by
+        m.match_type_number,
+        date_id,
+        referee_id,
+        first_team_id,
+        second_team_id,
+        match_type_id,
+        venue_id,
+        total_overs,
+        toss_winner_team_id,
+        toss_decision,
+        matach_result,
+        winner_team_id;

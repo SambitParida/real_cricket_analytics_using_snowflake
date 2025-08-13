@@ -1,9 +1,9 @@
--- USE SYSADMIN ROLE TO CREATE OBJECTS --
-USE ROLE SYSADMIN;
--- USE DATABASE --
-USE DATABASE CRICKET;
--- CREATE SCHEMAS --
-CREATE SCHEMA IF NOT EXISTS LAND;
-CREATE SCHEMA IF NOT EXISTS RAW;
-CREATE SCHEMA IF NOT EXISTS CLEAN;
-CREATE SCHEMA IF NOT EXISTS CONSUMPTION;
+-- use sysadmin role to create objects --
+use role sysadmin;
+-- use database --
+use database cricket;
+-- create schemas --
+create schema if not exists land;
+create schema if not exists raw;
+create schema if not exists clean;
+create schema if not exists consumption;

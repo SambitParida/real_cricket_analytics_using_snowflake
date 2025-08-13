@@ -1,31 +1,31 @@
--- USE SYSADMIN ROLE TO CREATE OBJECTS --
-USE ROLE SYSADMIN;
--- USE DATABASE --
-USE DATABASE CRICKET;
--- USE SCHEMA --
-USE SCHEMA CONSUMPTION;
+-- use sysadmin role to create objects --
+use role sysadmin;
+-- use database --
+use database cricket;
+-- use schema --
+use schema consumption;
 
-CREATE OR REPLACE TRANSIENT TABLE CALENDAR_DATES AS
-SELECT
-    DATEADD(DAY, SEQ4(), '2000-01-01') AS DATE
-FROM TABLE(GENERATOR(ROWCOUNT => 11323 + 1))
-ORDER BY DATE;
+create or replace transient table calendar_dates as
+select
+    dateadd(day, seq4(), '2000-01-01') as date
+from table(generator(rowcount => 11323 + 1))
+order by date;
 
-CREATE OR REPLACE TABLE DATE_DIM (DATE_ID, FULL_DT, DAY, MONTH, YEAR, QUARTER, DAYOFWEEK, DAYOFMONTH, DAYOFYEAR, DAYOFWEEKNAME, ISWEEKEND)
-AS
-SELECT 
-    ROW_NUMBER() OVER(ORDER BY DATE) AS DATE_ID,
-    DATE AS FULL_DT,
-    EXTRACT(DAY FROM DATE) AS DAY,
-    EXTRACT(MONTH FROM DATE) AS MONTH,
-    EXTRACT(YEAR FROM DATE) AS YEAR,
-    EXTRACT(QUARTER FROM DATE) AS QUARTER,
-    DAYOFWEEKISO(DATE) AS DAYOFWEEK,
-    EXTRACT(DAY FROM DATE) AS DAYOFMONTH,
-    DAYOFYEAR(DATE) AS DAYOFYEAR,
-    DAYNAME(DATE) AS DAYOFWEEKNAME,
-    CASE WHEN UPPER(DAYNAME(DATE)) IN ('SAT','SUN') THEN 1 ELSE 0 END AS ISWEEKEND
-FROM CRICKET.CONSUMPTION.CALENDAR_DATES;
+create or replace table date_dim (date_id, full_dt, day, month, year, quarter, dayofweek, dayofmonth, dayofyear, dayofweekname, isweekend)
+as
+select 
+    row_number() over(order by date) as date_id,
+    date as full_dt,
+    extract(day from date) as day,
+    extract(month from date) as month,
+    extract(year from date) as year,
+    extract(quarter from date) as quarter,
+    dayofweekiso(date) as dayofweek,
+    extract(day from date) as dayofmonth,
+    dayofyear(date) as dayofyear,
+    dayname(date) as dayofweekname,
+    case when upper(dayname(date)) in ('sat','sun') then 1 else 0 end as isweekend
+from cricket.consumption.calendar_dates;
 
 
 

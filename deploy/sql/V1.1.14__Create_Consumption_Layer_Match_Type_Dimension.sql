@@ -1,10 +1,10 @@
--- USE SYSADMIN ROLE TO CREATE OBJECTS --
-USE ROLE SYSADMIN;
--- USE DATABASE --
-USE DATABASE CRICKET;
--- USE SCHEMA --
-USE SCHEMA CONSUMPTION;
+-- use sysadmin role to create objects --
+use role sysadmin;
+-- use database --
+use database cricket;
+-- use schema --
+use schema consumption;
 
-TRUNCATE TABLE CRICKET.CONSUMPTION.MATCH_TYPE_DIM;
-INSERT INTO CRICKET.CONSUMPTION.MATCH_TYPE_DIM(MATCH_TYPE)
-SELECT DISTINCT MATCH_TYPE FROM CLEAN.MATCH_DETAIL_CLEAN;
+truncate table cricket.consumption.match_type_dim;
+insert into cricket.consumption.match_type_dim(match_type)
+select distinct match_type from clean.match_detail_clean;

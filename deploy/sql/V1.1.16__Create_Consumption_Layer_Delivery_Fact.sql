@@ -1,11 +1,11 @@
--- USE SYSADMIN ROLE TO CREATE OBJECTS --
-USE ROLE SYSADMIN;
--- USE DATABASE --
-USE DATABASE CRICKET;
--- USE SCHEMA --
-USE SCHEMA CONSUMPTION;
+-- use sysadmin role to create objects --
+use role sysadmin;
+-- use database --
+use database cricket;
+-- use schema --
+use schema consumption;
 
-TRUNCATE TABLE CRICKET.CONSUMPTION.delivery_fact;
+truncate table cricket.consumption.delivery_fact;
 insert into delivery_fact
 select 
     d.match_type_number as match_id,
@@ -16,9 +16,9 @@ select
     d.over,
     d.runs,
     (case when d.extras is null then 0 else d.extras end) as extra_runs,
-    (case when d.extra_type is null then 'Not Applicable' else d.extra_type end) as extra_type,
-    (case when d.player_out is null then 'None' else d.player_out end) as player_out,
-    (case when d.player_out_kind is null then 'None' else d.player_out_kind end) as player_out_kind
+    (case when d.extra_type is null then 'not applicable' else d.extra_type end) as extra_type,
+    (case when d.player_out is null then 'none' else d.player_out end) as player_out,
+    (case when d.player_out_kind is null then 'none' else d.player_out_kind end) as player_out_kind
 from 
     cricket.clean.delivery_clean_tbl d
     join team_dim td on d.team_name = td.team_name

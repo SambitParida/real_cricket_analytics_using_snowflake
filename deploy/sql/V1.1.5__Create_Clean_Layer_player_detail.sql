@@ -1,18 +1,18 @@
--- USE SYSADMIN ROLE TO CREATE OBJECTS --
-USE ROLE SYSADMIN;
--- USE DATABASE --
-USE DATABASE CRICKET;
--- USE SCHEMA --
-USE SCHEMA CLEAN;
--- CREATE TRANSIENT TABLE --
-CREATE OR REPLACE TRANSIENT TABLE CRICKET.CLEAN.PLAYER_CLEAN_TBL AS
-SELECT RAW.info:match_type_number::INT AS MATCH_TYPE_NUMBER,
-    F.PATH::TEXT AS COUNTRY,
-    TEAM.VALUE::TEXT AS PLAYER_NAME,
-    STG_FILE_NAME,
-    STG_FILE_ROW_NUMBER,
-    STG_FILE_CONTENT_KEY,
-    STG_MODIFIED_TS
-FROM CRICKET.RAW.MATCH_RAW_TBL RAW,
-    LATERAL FLATTEN(input => RAW.info:players) F,
-    LATERAL FLATTEN(input => F.value) TEAM;
+-- use sysadmin role to create objects --
+use role sysadmin;
+-- use database --
+use database cricket;
+-- use schema --
+use schema clean;
+-- create transient table --
+create or replace transient table cricket.clean.player_clean_tbl as
+select raw.info:match_type_number::int as match_type_number,
+    f.path::text as country,
+    team.value::text as player_name,
+    stg_file_name,
+    stg_file_row_number,
+    stg_file_content_key,
+    stg_modified_ts
+from cricket.raw.match_raw_tbl raw,
+    lateral flatten(input => raw.info:players) f,
+    lateral flatten(input => f.value) team;

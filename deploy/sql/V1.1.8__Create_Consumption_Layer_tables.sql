@@ -1,9 +1,9 @@
--- USE SYSADMIN ROLE TO CREATE OBJECTS --
-USE ROLE SYSADMIN;
--- USE DATABASE --
-USE DATABASE CRICKET;
--- USE SCHEMA --
-USE SCHEMA consumption;
+-- use sysadmin role to create objects --
+use role sysadmin;
+-- use database --
+use database cricket;
+-- use schema --
+use schema consumption;
 
 create or replace table date_dim (
     date_id int primary key autoincrement,
@@ -15,8 +15,8 @@ create or replace table date_dim (
     dayofweek int,
     dayofmonth int,
     dayofyear int,
-    dayofweekname varchar(3), -- to store day names (e.g., "Mon")
-    isweekend boolean -- to indicate if it's a weekend (True/False Sat/Sun both falls under weekend)
+    dayofweekname varchar(3), -- to store day names (e.g., "mon")
+    isweekend boolean -- to indicate if it's a weekend (true/false sat/sun both falls under weekend)
 );
 
 create or replace table referee_dim (
@@ -49,7 +49,7 @@ create or replace table venue_dim (
     state text,
     country text,
     continent text,
-    end_Names text,
+    end_names text,
     capacity number,
     pitch text,
     flood_light boolean,
@@ -67,14 +67,15 @@ create or replace table match_type_dim (
 );
 
 
-CREATE or replace TABLE match_fact (
-    match_id INT PRIMARY KEY,
-    date_id INT NOT NULL,
-    referee_id INT NOT NULL,
-    team_a_id INT NOT NULL,
-    team_b_id INT NOT NULL,
-    match_type_id INT NOT NULL,
-    venue_id INT NOT NULL,
+create or replace table match_fact (
+    match_id int primary key,
+    date_id int not null,
+    referee_id int not null,
+    referee_id int not null,
+    team_a_id int not null,
+    team_b_id int not null,
+    match_type_id int not null,
+    venue_id int not null,
     total_overs number(3),
     balls_per_over number(1),
 
@@ -101,35 +102,35 @@ CREATE or replace TABLE match_fact (
     match_result text not null, 
     winner_team_id int not null,
 
-    CONSTRAINT fk_date FOREIGN KEY (date_id) REFERENCES date_dim (date_id),
-    CONSTRAINT fk_referee FOREIGN KEY (referee_id) REFERENCES referee_dim (referee_id),
-    CONSTRAINT fk_team1 FOREIGN KEY (team_a_id) REFERENCES team_dim (team_id),
-    CONSTRAINT fk_team2 FOREIGN KEY (team_b_id) REFERENCES team_dim (team_id),
-    CONSTRAINT fk_match_type FOREIGN KEY (match_type_id) REFERENCES match_type_dim (match_type_id),
-    CONSTRAINT fk_venue FOREIGN KEY (venue_id) REFERENCES venue_dim (venue_id),
+    constraint fk_date foreign key (date_id) references date_dim (date_id),
+    constraint fk_referee foreign key (referee_id) references referee_dim (referee_id),
+    constraint fk_team1 foreign key (team_a_id) references team_dim (team_id),
+    constraint fk_team2 foreign key (team_b_id) references team_dim (team_id),
+    constraint fk_match_type foreign key (match_type_id) references match_type_dim (match_type_id),
+    constraint fk_venue foreign key (venue_id) references venue_dim (venue_id),
 
-    CONSTRAINT fk_toss_winner_team FOREIGN KEY (toss_winner_team_id) REFERENCES team_dim (team_id),
-    CONSTRAINT fk_winner_team FOREIGN KEY (winner_team_id) REFERENCES team_dim (team_id)
+    constraint fk_toss_winner_team foreign key (toss_winner_team_id) references team_dim (team_id),
+    constraint fk_winner_team foreign key (winner_team_id) references team_dim (team_id)
 );
 
-CREATE or replace TABLE delivery_fact (
-    match_id INT ,
-    team_id INT,
-    bowler_id INT,
-    batter_id INT,
-    non_striker_id INT,
-    over INT,
-    runs INT,
-    extra_runs INT,
-    extra_type VARCHAR(255),
-    player_out VARCHAR(255),
-    player_out_kind VARCHAR(255),
+create or replace table delivery_fact (
+    match_id int ,
+    team_id int,
+    bowler_id int,
+    batter_id int,
+    non_striker_id int,
+    over int,
+    runs int,
+    extra_runs int,
+    extra_type varchar(255),
+    player_out varchar(255),
+    player_out_kind varchar(255),
 
-    CONSTRAINT fk_del_match_id FOREIGN KEY (match_id) REFERENCES match_fact (match_id),
-    CONSTRAINT fk_del_team FOREIGN KEY (team_id) REFERENCES team_dim (team_id),
-    CONSTRAINT fk_bowler FOREIGN KEY (bowler_id) REFERENCES player_dim (player_id),
-    CONSTRAINT fk_batter FOREIGN KEY (batter_id) REFERENCES player_dim (player_id),
-    CONSTRAINT fk_stricker FOREIGN KEY (non_striker_id) REFERENCES player_dim (player_id)
+    constraint fk_del_match_id foreign key (match_id) references match_fact (match_id),
+    constraint fk_del_team foreign key (team_id) references team_dim (team_id),
+    constraint fk_bowler foreign key (bowler_id) references player_dim (player_id),
+    constraint fk_batter foreign key (batter_id) references player_dim (player_id),
+    constraint fk_stricker foreign key (non_striker_id) references player_dim (player_id)
 );
 
 
