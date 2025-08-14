@@ -113,6 +113,7 @@ create or replace table match_fact (
 );
 
 create or replace table delivery_fact (
+    delivery_id int primary key autoincrement,
     match_id int ,
     team_id int,
     bowler_id int,
