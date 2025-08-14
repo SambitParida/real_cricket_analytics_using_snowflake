@@ -53,7 +53,6 @@ The implementation is structured into the following key activities:
 
 ![Alt text](https://github.com/SambitParida/real_cricket_analytics_using_snowflake/blob/main/datamodel/DataLineage.jpg)
 
-
 ## Snowflake Concepts used
 
 1. Internal stage
